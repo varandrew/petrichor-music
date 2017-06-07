@@ -1,4 +1,4 @@
-# vue-music
+# Petrichor-music
 
 > music player
 
