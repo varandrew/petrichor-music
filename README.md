@@ -1,6 +1,6 @@
 # Petrichor-music
 
-> music player
+> A music player.
 
 ## Build Setup
 
