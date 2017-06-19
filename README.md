@@ -1,6 +1,6 @@
 # Petrichor-music
 
-> A music player.
+> A music player build by vue.
 
 ## Build Setup
 
