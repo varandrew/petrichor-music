@@ -5,6 +5,7 @@
       </slot>
     </div>
     <div class="dots">
+      <span class="dot" v-for="item in dots"></span>
     </div>
   </div>
 </template>
@@ -13,6 +14,11 @@
   import Bscroll from 'better-scroll'
   import {addClass} from 'common/js/dom'
   export default {
+    data() {
+      return {
+        dots: []
+      }
+    },
     props: {
       loop: {
         type: Boolean,
@@ -30,6 +36,7 @@
     mounted() {
       setTimeout(() => {
         this._setSliderWidth()
+        this._initDots()
         this._initSlider()
       }, 20)
     },
@@ -49,6 +56,9 @@
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
+      },
+      _initDots() {
+        this.dots = new Array(this.children.length)
       },
       _initSlider() {
         this.slider = new Bscroll(this.$refs.slider, {
