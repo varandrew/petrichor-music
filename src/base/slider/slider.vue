@@ -5,7 +5,8 @@
       </slot>
     </div>
     <div class="dots">
-      <span class="dot" v-for="item in dots"></span>
+      <span class="dot" v-for="(item, index) in dots" :class="{active:
+      currentPageIndex === index}"></span>
     </div>
   </div>
 </template>
@@ -13,10 +14,12 @@
 <script type="text/ecmascript-6">
   import Bscroll from 'better-scroll'
   import {addClass} from 'common/js/dom'
+
   export default {
     data() {
       return {
-        dots: []
+        dots: [],
+        currentPageIndex: 0
       }
     },
     props: {
@@ -71,6 +74,20 @@
           snapSpeed: 400,
           click: true
         })
+
+        this.slider.on('scrollEnd', () => {
+          let pageIndex = this.slider.getCurrentPage().pageX
+          this.currentPageIndex = this.loop ? pageIndex - 1 : pageIndex
+        })
+      },
+      _autoPlay() {
+        let pageIndex = this.currentPageIndex + 1
+        if (this.loop) {
+          pageIndex += 1
+        }
+        this.timer = setTimeout(() => {
+          this.slider.goToPage(pageIndex, 0, 400)
+        }, this.interval)
       }
     }
   }
