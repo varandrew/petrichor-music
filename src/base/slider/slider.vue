@@ -143,7 +143,7 @@
         width: 8px
         height: 8px
         border-radius: 50%
-        background: $color-text-l
+        background: rgba(255, 228, 225, 0.5)
         &.active
           width: 20px
           border-radius: 5px
