@@ -1,5 +1,12 @@
 <template>
-  <scroll class="list-view" :data="data" ref="listview">
+  <scroll
+    class="list-view"
+    :data="data"
+    ref="listview"
+    :listenScroll="listenScroll"
+    :probeType="probeType"
+    @scroll="scroll"
+  >
     <ul>
       <li v-for="group in data" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
@@ -13,8 +20,18 @@
     </ul>
     <div class="list-shortcut" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
-        <li v-for="(item, index) in shortcutList" class="item" :data-index="index">{{item}}</li>
+        <li v-for="(item, index) in shortcutList"
+            class="item"
+            :class="{'current': currentIndex === index}"
+            :data-index="index">{{item}}
+        </li>
       </ul>
+    </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
+    <div v-show="!data.length" class="loading-container">
+      <loading></loading>
     </div>
   </scroll>
 </template>
@@ -24,12 +41,22 @@
   import Loading from 'base/loading/loading'
   import {getData} from 'common/js/dom'
 
-  // const TITLE_HEIGHT = 30
+  const TITLE_HEIGHT = 30
   const ANCHOR_HEIGHT = 18
 
   export default {
     created() {
       this.touch = {}
+      this.listenScroll = true
+      this.listHeight = []
+      this.probeType = 3
+    },
+    data() {
+      return {
+        scrollY: -1,
+        currentIndex: 0,
+        diff: -1
+      }
     },
     props: {
       data: {
@@ -42,6 +69,12 @@
         return this.data.map((group) => {
           return group.title.substr(0, 1)
         })
+      },
+      fixedTitle() {
+        if (this.scrollY > 0) {
+          return
+        }
+        return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
       }
     },
     methods: {
@@ -59,13 +92,74 @@
         let anchorIndex = parseInt(this.touch.anchorIndex) + delta
         this._scrollTo(anchorIndex)
       },
+      scroll(pos) {
+        this.scrollY = pos.y
+      },
       _scrollTo(index) {
+        // 解决getData为null的问题
+        if (!index && index !== 0) {
+          return
+        }
+        // 解决shortcut滑动的边界问题
+        if (index < 0) {
+          index = 0
+        } else if (index > this.listHeight.length - 2) {
+          index = this.listHeight.length - 2
+        }
+        this.scrollY = -this.listHeight[index]
         this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
+      },
+      _calculateHeight() {
+        let height = 0
+        this.listHeight = []
+        this.listHeight.push(height)
+        const list = this.$refs.listGroup
+        for (let i = 0; i < list.length; ++i) {
+          let item = list[i]
+          height += item.clientHeight
+          this.listHeight.push(height)
+        }
       }
     },
     components: {
       Scroll,
       Loading
+    },
+    watch: {
+      data() {
+        setTimeout(() => {
+          this._calculateHeight()
+        }, 20)
+      },
+      scrollY(newY) {
+        const listHeight = this.listHeight
+        // 当滚动到顶部时，newY=0
+        if (newY > 0) {
+          this.currentIndex = 0
+          return
+        }
+
+        // 当在中间部分滚动时
+        for (let i = 0; i < listHeight.length - 1; i++) {
+          let [height1, height2] = [listHeight[i], listHeight[i + 1]]
+          if (-newY >= height1 && -newY < height2) {
+            this.currentIndex = i
+            this.diff = height2 + newY
+            return
+          }
+        }
+
+        // 当滚动到底部，且-newY大于最红一个元素的上限
+        this.currentIndex = listHeight.length - 2
+      },
+      diff(newVal) {
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop === fixedTop) {
+          return
+        }
+        this.fiexdTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+      }
     }
   }
 
@@ -87,8 +181,8 @@
         line-height: 30px
         padding-left: 20px
         font-size: $font-size-small
-        color: #b22
-        background: #fff
+        color: $color-theme
+        background: $color-text
       .list-group-item
         display: flex
         align-items: center
@@ -116,7 +210,7 @@
       .item
         padding: 3px
         line-height: 1
-        color: rgba(178, 34, 34, .7)
+        color: #666
         font-size: $font-size-small
         &.current
           color: $color-theme
@@ -130,8 +224,8 @@
         line-height: 30px
         padding-left: 20px
         font-size: $font-size-small
-        color: $color-text-l
-        background: $color-highlight-background
+        color: $color-theme
+        background: $color-text
     .loading-container
       position: absolute
       width: 100%
