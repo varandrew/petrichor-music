@@ -21,7 +21,7 @@
     },
     methods: {
       getDesc(song) {
-        return `${song.singer}。${song.album}`
+        return `${song.singer}-${song.album}`
       }
     }
   }
@@ -63,9 +63,9 @@
         overflow: hidden
         .name
           no-wrap()
-          color: $color-text
+          color: $color-text-dark
         .desc
           no-wrap()
           margin-top: 4px
-          color: $color-text-d
+          color: #666
 </style>

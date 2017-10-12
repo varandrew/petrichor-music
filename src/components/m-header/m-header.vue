@@ -23,7 +23,7 @@
     padding: 0 10px
     color: $fffafa
     font-size: 0
-    background-color: #b22222;
+    background-color: $color-theme;
     .icon
       display: inline-block
       vertical-align: top
@@ -53,7 +53,6 @@
         font-size: 15px
         &:after
           position: absolute
-          z-index: 2
           content: ""
           top: 0
           left: 0

@@ -122,9 +122,9 @@
             font-size: $font-size-medium
             .name
               margin-bottom: 10px
-              color: #333
+              color: $color-text-dark
             .desc
-              color: #666
+              color: $color-text-gray
       .loading-container
         position: absolute
         width: 100%

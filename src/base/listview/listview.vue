@@ -196,7 +196,7 @@
           border-radius: 50%
         .name
           margin-left: 20px
-          color: #333
+          color: $color-text-dark
           font-size: $font-size-medium
     .list-shortcut
       position: absolute
@@ -213,7 +213,7 @@
       .item
         padding: 3px
         line-height: 1
-        color: #666
+        color: $color-text-gray
         font-size: $font-size-small
         &.current
           color: $color-theme
