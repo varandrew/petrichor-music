@@ -16,7 +16,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -29,13 +29,13 @@
 import Scroll from 'base/scroll//scroll'
 import SongList from 'base/song-list/song-list'
 import { prefixStyle } from 'common/js/dom'
+import { mapActions } from 'vuex'
 import Loading from 'base/loading/loading'
 
 const RESERVED_HEIGHT = 40 // 预留高度
 const transform = prefixStyle('transform')
 const backdrop = prefixStyle('backdrop-filter')
 
-console.log(transform)
 export default {
   props: {
     bgImage: {
@@ -71,7 +71,16 @@ export default {
     },
     back() {
       this.$router.back()
-    }
+    },
+    selectItem(item, index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   watch: {
     scrollY(newY) {
@@ -115,7 +124,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import '~common/stylus/variable';
 @import '~common/stylus/mixin';
 
@@ -138,7 +147,7 @@ export default {
       display: block;
       padding: 10px;
       font-size: $font-size-large-x;
-      color: $color-theme;
+      color: $color-text;
     }
   }
 
@@ -175,8 +184,8 @@ export default {
         padding: 7px 0;
         margin: 0 auto;
         text-align: center;
-        border: 1px solid $color-theme;
-        color: $color-theme;
+        border: 1px solid $color-text;
+        color: $color-text;
         border-radius: 100px;
         font-size: 0;
 
