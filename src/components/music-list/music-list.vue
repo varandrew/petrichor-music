@@ -89,24 +89,36 @@ export default {
       let index = 0
       let scale = 1
       let blur = 0
+      // 用layer层跟随songList移动达到效果
       this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`
+
       if (newY > 0) {
+        // 下拉图片放大
         scale = 1 + percent
         index = 10
       } else {
         blur = Math.min(20 * percent, 20)
       }
+
       if (newY < this.minTranslateY) {
+      // 如果上拉高度过了阈值
         index = 10
+        this.$refs.bgImage.style.background = '#B22'
+        this.$refs.filter.style.display = 'none'
         this.$refs.bgImage.style.paddingTop = 0
         this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
         this.$refs.playBtn.style.display = 'none'
       } else {
+        this.$refs.bgImage.style.background = `url(${this.bgImage})`
+        this.$refs.bgImage.style.backgroundSize = 'cover' // safari出现bug所以要重置bg-size
+        this.$refs.filter.style.display = ''
         this.$refs.bgImage.style.paddingTop = '70%'
         this.$refs.bgImage.style.height = 0
         this.$refs.playBtn.style.display = ''
       }
-      this.$refs.filter.style[backdrop] = `blur${blur}px`
+
+      this.$refs.filter.style[backdrop] = `blur(${blur}px)` // 渐进增强safari添加毛玻璃效果
+      // this.$refs.filter.style['backdrop-filter'] = `blur(${blur}px)` Chrome支持得开启「实验性网络平台功能」
       this.$refs.bgImage.style[transform] = `scale(${scale})`
       this.$refs.bgImage.style.zIndex = index
     }
