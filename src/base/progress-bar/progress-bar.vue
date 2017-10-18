@@ -14,6 +14,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  // todo: fix the progress-bar.
   import {prefixStyle} from 'common/js/dom'
 
   const progressBtnWidth = 16
