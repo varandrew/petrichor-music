@@ -5,7 +5,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // better-scroll的二次封装
   import BScroll from 'better-scroll'
 
   export default {
