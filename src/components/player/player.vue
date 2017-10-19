@@ -33,8 +33,8 @@
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click="prev"></i>
@@ -62,7 +62,9 @@
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <i :class="miniPlayIcon" @click.stop="togglePlaying"></i>
+          <progress-circle :radius="radius" :percent="percent">
+            <i :class="miniPlayIcon" class="icon-mini" @click.stop="togglePlaying"></i>
+          </progress-circle>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
@@ -70,15 +72,18 @@
       </div>
     </transition>
     <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"
-    @timeupdate="updateTime"></audio>
+    @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import animations from 'create-keyframe-animation'
 import ProgressBar from 'base/progress-bar/progress-bar'
+import ProgressCircle from 'base/progress-circle/progress-circle'
 import { mapGetters, mapMutations } from 'vuex'
 import { prefixStyle } from 'common/js/dom'
+import { playMode } from 'common/js/config'
+import { shuffleArray } from 'common/js/utils'
 
 const transform = prefixStyle('transform')
 
@@ -86,7 +91,8 @@ export default {
   data() {
     return {
       songReady: false,
-      currentTime: 0
+      currentTime: 0,
+      radius: 32
     }
   },
   computed: {
@@ -95,6 +101,11 @@ export default {
     },
     miniPlayIcon() {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+    },
+    iconMode() {
+      return this.mode === playMode.sequence ? 'icon-sequence'
+                                            : this.mode === playMode.loop ? 'icon-loop'
+                                                                          : 'icon-random'
     },
     cdCls() {
       return this.playing ? 'play' : 'play pause'
@@ -110,7 +121,9 @@ export default {
       'playList',
       'currentSong',
       'playing',
-      'currentIndex'
+      'currentIndex',
+      'mode',
+      'sequenceList'
     ])
   },
   methods: {
@@ -154,6 +167,36 @@ export default {
     error() {
       this.songReady = true
     },
+    end() {
+      if (this.mode === playMode.loop) {
+        this.loop()
+      } else {
+        this.next()
+      }
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
+    },
+    changeMode() {
+      let mode = (this.mode + 1) % 3
+      let list = null
+      this.setPlayMode(mode)
+      if (mode === playMode.random) {
+        list = shuffleArray(this.sequenceList)
+      } else {
+        list = this.sequenceList
+      }
+      this.setPlayList(list)
+      this.resetCurrentIndex(list)
+    },
+    resetCurrentIndex(list) {
+      // 当改变了playList时当前歌曲的index也发生了改变，所以我们要reset
+      let index = list.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index)
+    },
     updateTime(e) {
       this.currentTime = e.target.currentTime
     },
@@ -164,7 +207,6 @@ export default {
       return `${minute}:${second}`
     },
     progressMoveTo(percent) {
-      console.log(percent)
       this.$refs.audio.currentTime = this.currentSong.duration * percent
       if (!this.playing) {
         this.togglePlaying()
@@ -242,11 +284,17 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlayList: 'SET_PLAY_LIST'
     })
   },
   watch: {
-    currentSong() {
+    currentSong(newSong, oldSong) {
+      // 解决暂停状态切换模式会触发歌曲播放的bug
+      if (newSong.id === oldSong.id) {
+        return
+      }
       this.$nextTick(() => {
         this.$refs.audio.play()
       })
@@ -259,7 +307,8 @@ export default {
     }
   },
   components: {
-    ProgressBar
+    ProgressBar,
+    ProgressCircle
   }
 }
 </script>
@@ -597,7 +646,7 @@ export default {
 
       .icon-play-mini, .icon-pause-mini, .icon-playlist {
         font-size: 30px;
-        color: $color-background;
+        color: rgba(255, 255, 255, .5);
       }
 
       .icon-mini {

@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar">
+  <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper" ref="progressBtn"
@@ -14,7 +14,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // todo: fix the progress-bar.
   import {prefixStyle} from 'common/js/dom'
 
   const progressBtnWidth = 16
@@ -32,42 +31,47 @@
     },
     methods: {
       progressTouchStart(e) {
-        this.touch.inited = true
+        this.touch.initiated = true
         this.touch.startX = e.touches[0].pageX
         this.touch.left = this.$refs.progress.clientWidth
       },
       progressTouchMove(e) {
-        if (!this.touch.inited) {
+        if (!this.touch.initiated) {
           return
         }
-        console.log(this.touch)
-        let delatX = e.touches[0] - this.touch.startX
+        let delatX = e.touches[0].pageX - this.touch.startX
         let offsetWidth = Math.min(this.barWidth(), Math.max(0, this.touch.left + delatX))
-        console.log(offsetWidth)
         this._offset(offsetWidth)
       },
       progressTouchEnd(e) {
-        const percent = this.$refs.progress.clientWidth / this.barWidth()
-        this.touch.inited = false
-        this.$emit('progressMove', percent)
+        this.touch.initiated = false
+        this._triggerPercent()
+      },
+      progressClick(e) {
+        this._offset(e.offsetX)
+        this._triggerPercent()
       },
       _offset(offsetWidth) {
         this.$refs.progress.style.width = `${offsetWidth}px`
         this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       },
+      _triggerPercent() {
+        const percent = this.$refs.progress.clientWidth / this.barWidth()
+        this.$emit('progressMove', percent)
+      },
       barWidth() {
-        console.log(this.$refs.progressBar.clientWidth, progressBtnWidth)
         return (this.$refs.progressBar.clientWidth - progressBtnWidth)
       }
     },
     watch: {
       percent(newPercent) {
-        if (newPercent >= 0 && !this.touch.inited) {
+        if (newPercent >= 0 && !this.touch.initiated) {
           let offsetWidth = this.barWidth() * newPercent
           this._offset(offsetWidth)
         }
       }
-    }
+    },
+    components: {}
   }
 </script>
 

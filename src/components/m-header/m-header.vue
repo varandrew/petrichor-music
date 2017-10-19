@@ -21,7 +21,7 @@
     height: 44px
     text-align: start
     padding: 0 10px
-    color: $fffafa
+    color: $color-background
     font-size: 0
     background-color: $color-theme;
     .icon
