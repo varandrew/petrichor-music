@@ -6,7 +6,7 @@
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="play-wrapper">
-        <div class="play" v-show="songs.length > 0" ref="playBtn">
+        <div class="play" v-show="songs.length > 0" ref="playBtn" @click="playRandom">
           <i class="icon-play"></i>
           <span class="text">随机播放</span>
         </div>
@@ -78,6 +78,11 @@ export default {
         index
       })
     },
+    playRandom() {
+      this.randomPlay({
+        list: this.songs
+      })
+    },
     _floatToPercent(point, retain = 2) {
       // 浮点数转换成百分数
       let str = parseFloat(point * 100).toFixed(retain)
@@ -85,7 +90,8 @@ export default {
       return str
     },
     ...mapActions([
-      'selectPlay'
+      'selectPlay',
+      'randomPlay'
     ])
   },
   watch: {
