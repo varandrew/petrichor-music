@@ -129,9 +129,11 @@
           .icon
             flex: 0 0 60px
             width: 60px
-            padding-right: 20px
+            height: 60px
+            box-shadow:0px 0px 10px #000
           .text
             display: flex
+            padding-left: 20px
             flex-direction: column
             justify-content: center
             flex: 1

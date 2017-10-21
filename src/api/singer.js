@@ -1,10 +1,10 @@
 import jsonp from '../common/js/jsonp'
-import {CommonParams, options} from './config'
+import {commonParams, options} from './config'
 
 export function getSingerList() {
   const url = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg'
 
-  const data = Object.assign({}, CommonParams, {
+  const data = Object.assign({}, commonParams, {
     channel: 'singer',
     page: 'list',
     key: 'all_all_all',
@@ -21,8 +21,7 @@ export function getSingerList() {
 export function getSingerDetail(singerId) {
   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
 
-  const data = Object.assign({}, CommonParams, {
-    g_tk: 5381,
+  const data = Object.assign({}, commonParams, {
     loginUin: 0,
     hostUin: 0,
     needNewCode: 0,
