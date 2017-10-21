@@ -28,15 +28,17 @@
 <script type="text/ecmascript-6">
 import Scroll from 'base/scroll//scroll'
 import SongList from 'base/song-list/song-list'
+import Loading from 'base/loading/loading'
 import { prefixStyle } from 'common/js/dom'
 import { mapActions } from 'vuex'
-import Loading from 'base/loading/loading'
+import { playListMixin } from 'common/js/mixin'
 
 const RESERVED_HEIGHT = 40 // 预留高度
 const transform = prefixStyle('transform')
 const backdrop = prefixStyle('backdrop-filter')
 
 export default {
+  mixins: [playListMixin],
   props: {
     bgImage: {
       type: String,
@@ -66,6 +68,11 @@ export default {
     this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
   },
   methods: {
+    handlePlayList(playList) {
+      let bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     scroll(pos) {
       this.scrollY = pos.y
     },

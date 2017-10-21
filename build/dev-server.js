@@ -64,6 +64,28 @@ apiRoutes.get('/getLyric', function (req,res) {
     console.log(e)
   })
 })
+apiRoutes.get('/getSongList', function (req,res) {
+  var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+
+  axios.get(url, {
+    headers: {
+      referer: `https://y.qq.com/n/yqq/playlist/${req.query.disstid}.html`,
+      host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    var ret = response.data
+    // ret = ret.replace(/\\"/g, '\\\\"')  nodejs和浏览器环境不同，并不用作二次转义
+    if (typeof ret === 'string') {
+      // 将服务端返回的jsonp转为json格式
+      ret = ret.slice(req.query.jsonpCallback.length + 1, ret.length -1)
+      ret = JSON.parse(ret)
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
 app.use('/api', apiRoutes)
 
 var compiler = webpack(webpackConfig)
