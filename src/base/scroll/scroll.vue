@@ -24,6 +24,14 @@
       listenScroll: {
         type: Boolean,
         deafult: false
+      },
+      pullup: {
+        type: Boolean,
+        deafult: false
+      },
+      beforeScroll: {
+        type: Boolean,
+        default: false
       }
     },
     mounted() {
@@ -45,6 +53,20 @@
           let self = this
           this.scroll.on('scroll', (pos) => {
             self.$emit('scroll', pos)
+          })
+        }
+
+        if (this.pullup) {
+          this.scroll.on('scrollEnd', () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToBottom')
+            }
+          })
+        }
+
+        if (this.beforeScroll) {
+          this.scroll.on('beforeScrollStart', () => {
+            this.$emit('beforeListScroll')
           })
         }
       },
