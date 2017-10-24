@@ -9,18 +9,18 @@
 
 ### 歌手页面
 
-<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_3_squashed.png" width="365" height="619"/>
+<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_3_squashed.png" width="365" height="619"/> <img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_4_squashed.png" width="365" height="619"/>
 
 ### 播放页面
 
-<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_4_squashed.png" width="365" height="619"/> <img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_5_squashed.png" width="365" height="619"/>
+<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_5_squashed.png" width="365" height="619"/> <img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_6_squashed.png" width="365" height="619"/>
 ### 排行榜页面
 
-<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_6_squashed.png" width="365" height="619"/>
+<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_7_squashed.png" width="365" height="619"/> <img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_8_squashed.png" width="365" height="619"/>
 
 ### 搜索页面
 
-<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_7_squashed.png" width="365" height="619"/>
+<img src="https://github.com/varandrew/Petrichor-Music/blob/master/screenshot/screenshot_9_squashed.png" width="365" height="619"/>
 
 ## Build Setup
 
