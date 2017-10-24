@@ -35,119 +35,119 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Slider from 'base/slider/slider'
-  import Scroll from 'base/scroll/scroll'
-  import Loading from 'base/loading/loading'
-  import {getRecommond, getDiscList} from 'api/recommend'
-  import { mapMutations } from 'vuex'
-  import { playListMixin } from 'common/js/mixin'
-  import { ERR_OK } from 'api/config'
+import Slider from 'base/slider/slider'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
+import { getRecommond, getDiscList } from 'api/recommend'
+import { mapMutations } from 'vuex'
+import { playListMixin } from 'common/js/mixin'
+import { ERR_OK } from 'api/config'
 
-  export default {
-    mixins: [playListMixin],
-    data() {
-      return {
-        recommends: [],
-        discList: []
-      }
+export default {
+  mixins: [playListMixin],
+  data() {
+    return {
+      recommends: [],
+      discList: []
+    }
+  },
+  created() {
+    this._getRecommend()
+    this._getDiscList()
+  },
+  methods: {
+    handlePlayList(playList) {
+      let bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
     },
-    created() {
-      this._getRecommend()
-      this._getDiscList()
+    selectItem(item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.setDisc(item)
     },
-    methods: {
-      handlePlayList(playList) {
-        let bottom = playList.length > 0 ? '60px' : ''
-        this.$refs.recommend.style.bottom = bottom
-        this.$refs.scroll.refresh()
-      },
-      selectItem(item) {
-        this.$router.push({
-          path: `/recommend/${item.dissid}`
-        })
-        this.setDisc(item)
-      },
-      _getRecommend() {
-        getRecommond().then((res) => {
-          if (res.code === ERR_OK) {
-            this.recommends = res.data.slider
-          }
-        })
-      },
-      _getDiscList() {
-        getDiscList().then((res) => {
-          if (res.code === ERR_OK) {
-            this.discList = res.data.list
-          }
-        })
-      },
-      loadImg() {
-        if (!this.checkLoaded) {
-          this.$refs.scroll.refresh()
-          this.checkLoaded = true
+    _getRecommend() {
+      getRecommond().then(res => {
+        if (res.code === ERR_OK) {
+          this.recommends = res.data.slider
         }
-      },
-      ...mapMutations({
-        setDisc: 'SET_DISC'
       })
     },
-    components: {
-      Slider,
-      Scroll,
-      Loading
-    }
+    _getDiscList() {
+      getDiscList().then(res => {
+        if (res.code === ERR_OK) {
+          this.discList = res.data.list
+        }
+      })
+    },
+    loadImg() {
+      if (!this.checkLoaded) {
+        this.$refs.scroll.refresh()
+        this.checkLoaded = true
+      }
+    },
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    })
+  },
+  components: {
+    Slider,
+    Scroll,
+    Loading
   }
+}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
+@import '~common/stylus/variable'
 
-  .recommend
-    position: fixed
-    width: 100%
-    top: 88px
-    bottom: 0
-    .recommend-content
-      height: 100%
-      overflow: hidden
-      .slider-wrapper
-        position: relative
-        width: 100%
-        overflow: hidden
-      .recommend-list
-        .list-title
-          height: 65px
-          line-height: 65px
-          text-align: center
-          font-size: $font-size-medium
-          color: $color-theme
-        .item
-          display: flex
-          box-sizing: border-box
-          align-items: center
-          padding: 0 20px 20px 20px
-          .icon
-            flex: 0 0 60px
-            width: 60px
-            height: 60px
-            box-shadow:0px 0px 10px #000
-          .text
-            display: flex
-            padding-left: 20px
-            flex-direction: column
-            justify-content: center
-            flex: 1
-            line-height: 20px
-            overflow: hidden
-            font-size: $font-size-medium
-            .name
-              margin-bottom: 10px
-              color: $color-text-dark
-            .desc
-              color: $color-text-gray
-      .loading-container
-        position: absolute
-        width: 100%
-        top: 50%
-        transform: translateY(-50%)
+.recommend
+  position fixed
+  width 100%
+  top 88px
+  bottom 0
+  .recommend-content
+    height 100%
+    overflow hidden
+    .slider-wrapper
+      position relative
+      width 100%
+      overflow hidden
+    .recommend-list
+      .list-title
+        height 65px
+        line-height 65px
+        text-align center
+        font-size $font-size-medium
+        color $color-theme
+      .item
+        display flex
+        box-sizing border-box
+        align-items center
+        padding 0 20px 20px 20px
+        .icon
+          flex 0 0 60px
+          width 60px
+          height 60px
+          box-shadow 0px 0px 10px #000
+        .text
+          display flex
+          padding-left 20px
+          flex-direction column
+          justify-content center
+          flex 1
+          line-height 20px
+          overflow hidden
+          font-size $font-size-medium
+          .name
+            margin-bottom 10px
+            color $color-text-dark
+          .desc
+            color $color-text-gray
+    .loading-container
+      position absolute
+      width 100%
+      top 50%
+      transform translateY(-50%)
 </style>

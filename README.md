@@ -2,6 +2,14 @@
 
 > A music player build by vue.
 
+## Screenshot
+![](./screenshot/localhost_8080_(iPhone 6) (1)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (2)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (3)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (4)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (5)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (6)-squashed.png)
+![](./screenshot/localhost_8080_(iPhone 6) (7)-squashed.png)
 ## Build Setup
 
 ``` bash

@@ -23,9 +23,7 @@ export default {
     bgImage() {
       return this.disc.imgurl
     },
-    ...mapGetters([
-      'disc'
-    ])
+    ...mapGetters(['disc'])
   },
   created() {
     this._getSongList()
@@ -36,7 +34,7 @@ export default {
         this.$router.push('/recommend')
         return
       }
-      getSongList(this.disc.dissid).then((res) => {
+      getSongList(this.disc.dissid).then(res => {
         if (res.code === ERR_OK) {
           this.songs = this._normalizeSongs(res.cdlist[0].songlist)
         }
@@ -44,7 +42,7 @@ export default {
     },
     _normalizeSongs(list) {
       let ret = []
-      list.forEach((musicData) => {
+      list.forEach(musicData => {
         if (musicData.songid && musicData.albumid) {
           ret.push(createSong(musicData))
         }
@@ -59,9 +57,8 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  .slide-enter-active, .slide-leave-activ
-    transition: all 0.3s
-
-  .slide-enter, .slide-leave-to
-    transform: translate3d(100%, 0, 0)
+.slide-enter-active, .slide-leave-activ
+  transition all 0.3s
+.slide-enter, .slide-leave-to
+  transform translate3d(100%, 0, 0)
 </style>
