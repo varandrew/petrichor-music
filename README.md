@@ -3,13 +3,13 @@
 > A music player build by vue.
 
 ## Screenshot
-![](./screenshot/localhost_8080_(iPhone 6) (1)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (2)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (3)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (4)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (5)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (6)-squashed.png)
-![](./screenshot/localhost_8080_(iPhone 6) (7)-squashed.png)
+![](screenshot/screenshot_1_squashed.png)
+![](screenshot/screenshot_2_squashed.png)
+![](screenshot/screenshot_3_squashed.png)
+![](screenshot/screenshot_4_squashed.png)
+![](screenshot/screenshot_5_squashed.png)
+![](screenshot/screenshot_6_squashed.png)
+![](screenshot/screenshot_7_squashed.png)
 ## Build Setup
 
 ``` bash
@@ -27,3 +27,5 @@ npm run build --report
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
