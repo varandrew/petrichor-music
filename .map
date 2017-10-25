@@ -1,0 +1,123 @@
+.
+|____.babelrc
+|____screenshot
+| |____screenshot_5_squashed.png
+| |____screenshot_2_squashed.png
+| |____screenshot_3_squashed.png
+| |____screenshot_4_squashed.png
+| |____screenshot_9_squashed.png
+| |____screenshot_8_squashed.png
+| |____screenshot_6_squashed.png
+| |____screenshot_1_squashed.png
+| |____screenshot_7_squashed.png
+|____index.html
+|____config
+| |____dev.env.js
+| |____index.js
+| |____prod.env.js
+|____node_modules|
+|____src
+| |____App.vue
+| |____main.js
+| |____components
+| | |____suggest
+| | | |____suggest.vue
+| | |____music-list
+| | | |____music-list.vue
+| | |____recommend
+| | | |____recommend.vue
+| | |____m-header
+| | | |____m-header.vue
+| | | |____logo@3x.png
+| | | |____logo@2x.png
+| | |____tab
+| | | |____tab.vue
+| | |____search
+| | | |____search.vue
+| | |____disc
+| | | |____disc.vue
+| | |____top-list
+| | | |____top-list.vue
+| | |____singer-detail
+| | | |____singer-detail.vue
+| | |____rank
+| | | |____rank.vue
+| | |____singer
+| | | |____singer.vue
+| | |____player
+| | | |____player.vue
+| |____common
+| | |____js
+| | | |____cache.js
+| | | |____mixin.js
+| | | |____config.js
+| | | |____singer.js
+| | | |____dom.js
+| | | |____song.js
+| | | |____utils.js
+| | | |____jsonp.js
+| | | |____storage.js
+| | |____stylus
+| | | |____icon.styl
+| | | |____mixin.styl
+| | | |____reset.styl
+| | | |____index.styl
+| | | |____base.styl
+| | | |____variable.styl
+| | |____image
+| | | |____default.gif
+| | |____fonts
+| | | |____iconfont.woff
+| | | |____iconfont.eot
+| | | |____music-icon.svg
+| | | |____iconfont.ttf
+| | | |____music-icon.eot
+| | | |____iconfont.svg
+| | | |____music-icon.woff
+| | | |____music-icon.ttf
+| |____api
+| | |____config.js
+| | |____singer.js
+| | |____song.js
+| | |____rank.js
+| | |____recommend.js
+| | |____search.js
+| |____base
+| | |____progress-circle
+| | | |____progress-circle.vue
+| | |____search-list
+| | | |____search-list.vue
+| | |____loading
+| | | |____loading.gif
+| | | |____loading.vue
+| | |____scroll
+| | | |____scroll.vue
+| | |____progress-bar
+| | | |____progress-bar.vue
+| | |____slider
+| | | |____slider.vue
+| | |____listview
+| | | |____listview.vue
+| | |____search-box
+| | | |____search-box.vue
+| | |____song-list
+| | | |____third@2x.png
+| | | |____third@3x.png
+| | | |____first@2x.png
+| | | |____song-list.vue
+| | | |____first@3x.png
+| | | |____second@2x.png
+| | | |____second@3x.png
+| | |____no-result
+| | | |____no-result@2x.png
+| | | |____no-result@3x.png
+| | | |____no-result.vue
+| |____store
+| | |____mutations.js
+| | |____actions.js
+| | |____getters.js
+| | |____index.js
+| | |____mutation-types.js
+| | |____state.js
+| |____router
+| | |____index.js

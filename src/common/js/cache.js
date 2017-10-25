@@ -17,9 +17,15 @@ function insertArray(arr, val, compare, maxLen) {
   }
 }
 
+function deleteFromArray(arr, compare) {
+  let index = arr.findIndex(compare)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+}
+
 export function saveSearch(query) {
   let searches = store.get(SEARCH_KEY, [])
-  console.log(searches)
   insertArray(searches, query, (item) => {
     return item === query
   }, SEARCH_MAX_LENGTH)
@@ -29,4 +35,18 @@ export function saveSearch(query) {
 
 export function loadSearch() {
   return store.get(SEARCH_KEY, [])
+}
+
+export function deleteSearch(query) {
+  let searches = store.get(SEARCH_KEY, [])
+  deleteFromArray(searches, (item) => {
+    return item === query
+  })
+  store.set(SEARCH_KEY, searches)
+  return searches
+}
+
+export function clearSearch() {
+  store.remove(SEARCH_KEY)
+  return []
 }

@@ -89,17 +89,19 @@
         </div>
       </div>
     </transition>
+    <play-list></play-list>
     <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"
            @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import Scroll from 'base/scroll/scroll'
+import PlayList from 'components/play-list/play-list'
 import animations from 'create-keyframe-animation'
+import LyricParser from 'lyric-parser'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
-import LyricParser from 'lyric-parser'
-import Scroll from 'base/scroll/scroll'
 import { mapGetters, mapMutations } from 'vuex'
 import { prefixStyle } from 'common/js/dom'
 import { playMode } from 'common/js/config'
@@ -446,9 +448,10 @@ export default {
     }
   },
   components: {
+    Scroll,
+    PlayList,
     ProgressBar,
-    ProgressCircle,
-    Scroll
+    ProgressCircle
   }
 }
 </script>

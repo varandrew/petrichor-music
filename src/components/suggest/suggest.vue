@@ -143,6 +143,9 @@ export default {
         this.hasMore = false
       }
     },
+    refresh() {
+      this.$refs.suggest.refresh()
+    },
     ...mapMutations({
       setSinger: 'SET_SINGER'
     }),
