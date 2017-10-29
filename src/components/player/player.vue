@@ -84,12 +84,12 @@
             <i :class="miniPlayIcon" class="icon-mini" @click.stop="togglePlaying"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlayList">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
-    <play-list></play-list>
+    <play-list ref="playList"></play-list>
     <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"
            @timeupdate="updateTime" @ended="end"></audio>
   </div>
@@ -102,15 +102,16 @@ import animations from 'create-keyframe-animation'
 import LyricParser from 'lyric-parser'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
-import { mapGetters, mapMutations } from 'vuex'
-import { prefixStyle } from 'common/js/dom'
 import { playMode } from 'common/js/config'
-import { shuffleArray } from 'common/js/utils'
+import { playerMixin } from 'common/js/mixin'
+import { prefixStyle } from 'common/js/dom'
+import { mapGetters, mapMutations } from 'vuex'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
+  mixins: [playerMixin],
   data() {
     return {
       songReady: false,
@@ -132,11 +133,6 @@ export default {
     miniPlayIcon() {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
     },
-    iconMode() {
-      return this.mode === playMode.sequence
-        ? 'icon-sequence'
-        : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
     cdCls() {
       return this.playing ? 'play' : 'play pause'
     },
@@ -148,12 +144,8 @@ export default {
     },
     ...mapGetters([
       'fullScreen',
-      'playList',
-      'currentSong',
       'playing',
-      'currentIndex',
-      'mode',
-      'sequenceList'
+      'currentIndex'
     ])
   },
   methods: {
@@ -219,24 +211,8 @@ export default {
         this.currentLyric.seek(0)
       }
     },
-    changeMode() {
-      let mode = (this.mode + 1) % 3
-      let list = null
-      this.setPlayMode(mode)
-      if (mode === playMode.random) {
-        list = shuffleArray(this.sequenceList)
-      } else {
-        list = this.sequenceList
-      }
-      this.setPlayList(list)
-      this.resetCurrentIndex(list)
-    },
-    resetCurrentIndex(list) {
-      // 当改变了playList时当前歌曲的index也发生了改变，所以我们要reset
-      let index = list.findIndex(item => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(index)
+    showPlayList() {
+      this.$refs.playList.show()
     },
     middleTouchStart(e) {
       let touch = e.touches[0]
@@ -354,7 +330,7 @@ export default {
       if (!this.songReady) {
         return
       }
-      this.setPlayState(!this.playing)
+      this.setPlayingState(!this.playing)
       if (this.currentLyric) {
         this.currentLyric.togglePlay()
       }
@@ -418,15 +394,15 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlayList: 'SET_PLAY_LIST'
+      setFullScreen: 'SET_FULL_SCREEN'
     })
   },
   watch: {
     currentSong(newSong, oldSong) {
+      // 解决播放列表为空时触发歌曲播放的bug
+      if (!newSong.id) {
+        return
+      }
       // 解决暂停状态切换模式会触发歌曲播放的bug
       if (newSong.id === oldSong.id) {
         return

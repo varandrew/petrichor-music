@@ -1,27 +1,27 @@
 <template>
   <transition name="list-fade">
-    <div class="playlist">
-      <div class="list-wrapper">
+    <div class="playlist" v-show="showFlag" @click="hide">
+      <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
-            <i class="icon"></i>
-            <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <i class="icon" :class="iconMode" @click="changeMode"></i>
+            <span class="text">{{modeText}}</span>
+            <span class="clear" @click.stop="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <scroll ref="listContent" class="list-content">
-          <ul>
-            <li ref="listItem" class="item">
-              <i class="current"></i>
-              <span class="text"></span>
+        <scroll ref="listContent" class="list-content" :data="sequenceList">
+          <transition-group name="list" tag="ul">
+            <li :key="item.id" ref="listItem" class="item" v-for="(item, index) in sequenceList" @click="selectItem(item, index)">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
               <span class="like">
                 <i class="icon-not-favorite"></i>
               </span>
-              <span class="delete">
+              <span class="delete" @click.stop="deleteItem(item)">
                 <i class="icon-delete"></i>
               </span>
             </li>
-          </ul>
+          </transition-group>
         </scroll>
         <div class="list-operate">
           <div class="add">
@@ -29,11 +29,11 @@
             <span class="text">添加歌曲到队列</span>
           </div>
         </div>
-        <div class="list-close">
+        <div class="list-close" @click="hide">
           <span>关闭</span>
         </div>
       </div>
-      <confirm ref="confirm" text="是否清空播放列表" confirmBtnText="清空"></confirm>
+      <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
       <!-- <add-song ref="addSong"></add-song> -->
     </div>
   </transition>
@@ -43,18 +43,82 @@
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
 // import AddSong from 'components/add-song/add-song'
-// import { playMode } from 'common/js/config'
-// import { mapActions } from 'vuex'
-// import { playerMixin } from 'common/js/mixin'
+import { playMode } from 'common/js/config'
+import { mapActions } from 'vuex'
+import { playerMixin } from 'common/js/mixin'
 
 export default {
+  mixins: [playerMixin],
   data() {
     return {
       showFlag: false,
       refreshDelay: 120
     }
   },
-  methods: {},
+  computed: {
+    modeText() {
+      let listLength = this.playList.length
+      let modeTxt = this.mode === playMode.sequence ? '顺序播放'
+                                                    : this.mode === playMode.random ? '随机播放'
+                                                                                    : '单曲循环'
+      return `${modeTxt}(${listLength})`
+    }
+  },
+  methods: {
+    show() {
+      this.showFlag = true
+      setTimeout(() => {
+        this.$refs.listContent.refresh()
+        this.scrollToCurrent(this.currentSong)
+      }, 20)
+    },
+    hide() {
+      this.showFlag = false
+    },
+    showConfirm() {
+      this.$refs.confirm.show()
+    },
+    confirmClear() {
+      this.clearSongList()
+      this.hide()
+    },
+    getCurrentIcon(item) {
+      return this.currentSong.id === item.id ? 'icon-play' : ''
+    },
+    selectItem(item, index) {
+      if (this.mode === playMode.random) {
+        index = this.playList.findIndex((song) => {
+          return song.id === item.id
+        })
+      }
+      this.setCurrentIndex(index)
+      this.setPlayingState(true)
+    },
+    deleteItem(item) {
+      this.deleteSong(item)
+      if (!this.playList.length) {
+        this.hide()
+      }
+    },
+    scrollToCurrent(current) {
+      let index = this.sequenceList.findIndex((item) => {
+        return current.id === item.id
+      })
+      this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
+    },
+    ...mapActions([
+      'deleteSong',
+      'clearSongList'
+    ])
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      if (!this.showFlag || newSong.id === oldSong.id) {
+        return
+      }
+      this.scrollToCurrent(newSong)
+    }
+  },
   components: {
     Scroll,
     Confirm
@@ -96,17 +160,17 @@ export default {
         align-items center
         .icon
           margin-right 10px
-          font-size 30px
-          color $color-theme-d
+          font-size 20px
+          color rgba(255, 255, 255, 0.5)
         .text
           flex 1
           font-size $font-size-medium
-          color $color-text-l
+          color $color-text-wl
         .clear
           extend-click()
           .icon-clear
             font-size $font-size-medium
-            color rgba(255, 255, 255, 0.5)
+            color $color-text-wl
     .list-content
       max-height 240px
       overflow hidden
@@ -123,13 +187,13 @@ export default {
         .current
           flex 0 0 20px
           width 20px
-          font-size $font-size-small
-          color $color-theme-d
+          font-size $font-size-medium
+          color $color-theme
         .text
           flex 1
           no-wrap()
           font-size $font-size-medium
-          color $color-text-d
+          color $color-text
         .like
           extend-click()
           margin-right 15px
@@ -150,7 +214,7 @@ export default {
         padding 8px 16px
         border 1px solid $color-text-wl
         border-radius 100px
-        color rgba(255, 255, 255, 0.5)
+        color $color-text-wl
         .icon-add
           margin-right 5px
           font-size $font-size-small-s
