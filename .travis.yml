@@ -6,7 +6,7 @@ node_js:
 
 install:
   - npm install -g codecov
-
+  - npm install --save-dev mocha
 #运行的脚本命令
 script:
   - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
