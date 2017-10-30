@@ -4,12 +4,8 @@ language: node_js
 node_js:
   - 8.6.0
 
-install:
-  - npm install --save-dev mocha istanbul codecov
 #运行的脚本命令
 script:
-  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
-  - codecov
   - npm run build
 #指定分支，只有指定的分支提交时才会运行脚本
 branches:
