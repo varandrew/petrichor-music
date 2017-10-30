@@ -9,13 +9,13 @@
             <span class="clear" @click.stop="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <scroll ref="listContent" class="list-content" :data="sequenceList">
+        <scroll ref="listContent" class="list-content" :data="sequenceList" :refreshDelay="refreshDelay">
           <transition-group name="list" tag="ul">
             <li :key="item.id" ref="listItem" class="item" v-for="(item, index) in sequenceList" @click="selectItem(item, index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
-              <span class="like">
-                <i class="icon-not-favorite"></i>
+              <span class="like" @click.stop="toggleFavorite(item)">
+                <i :class="getFavoriteIcon(item)"></i>
               </span>
               <span class="delete" @click.stop="deleteItem(item)">
                 <i class="icon-delete"></i>
@@ -24,7 +24,7 @@
           </transition-group>
         </scroll>
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="addSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
-      <!-- <add-song ref="addSong"></add-song> -->
+      <add-song ref="addSong"></add-song>
     </div>
   </transition>
 </template>
@@ -42,7 +42,7 @@
 <script type="text/ecmascript-6">
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
-// import AddSong from 'components/add-song/add-song'
+import AddSong from 'components/add-song/add-song'
 import { playMode } from 'common/js/config'
 import { mapActions } from 'vuex'
 import { playerMixin } from 'common/js/mixin'
@@ -74,6 +74,9 @@ export default {
     },
     hide() {
       this.showFlag = false
+    },
+    addSong() {
+      this.$refs.addSong.show()
     },
     showConfirm() {
       this.$refs.confirm.show()
@@ -121,7 +124,8 @@ export default {
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   }
 }
 </script>
@@ -200,7 +204,7 @@ export default {
           font-size $font-size-small
           color $color-text-wd
           .icon-favorite
-            color $color-text-wd
+            color $color-theme
         .delete
           extend-click()
           font-size $font-size-small

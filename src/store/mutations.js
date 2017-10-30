@@ -19,8 +19,14 @@ const mutations = {
   [types.SET_PLAY_LIST](state, list) {
     state.playList = list
   },
+  [types.SET_PLAY_HISTORY](state, history) {
+    state.playHistory = history
+  },
   [types.SET_SEQUENCE_LIST](state, list) {
     state.sequenceList = list
+  },
+  [types.SET_FAVORITE_LIST](state, list) {
+    state.favoriteList = list
   },
   [types.SET_PLAY_MODE](state, mode) {
     state.mode = mode

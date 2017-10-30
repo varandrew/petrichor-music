@@ -10,7 +10,11 @@ export const fullScreen = state => state.fullScreen
 
 export const playList = state => state.playList
 
+export const playHistory = state => state.playHistory
+
 export const sequenceList = state => state.sequenceList
+
+export const favoriteList = state => state.favoriteList
 
 export const mode = state => state.mode
 

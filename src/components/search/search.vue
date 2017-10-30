@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll class="shortcut" ref="shortcut" :data="shortcut">
+      <scroll class="shortcut" ref="shortcut" :data="shortcut" :refreshDelay="refreshDelay">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -42,15 +42,14 @@ import Confirm from 'base/confirm/confirm'
 import Suggest from 'components/suggest/suggest'
 import { getHotKey } from 'api/search'
 import { ERR_OK } from 'api/config'
-import { playListMixin } from 'common/js/mixin'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
+import { playListMixin, searchMixin } from 'common/js/mixin'
 
 export default {
-  mixins: [playListMixin],
+  mixins: [playListMixin, searchMixin],
   data() {
     return {
-      hotKey: [],
-      query: ''
+      hotKey: []
     }
   },
   created() {
@@ -59,8 +58,7 @@ export default {
   computed: {
     shortcut() {
       return this.hotKey.concat(this.searchHistory)
-    },
-    ...mapGetters(['searchHistory'])
+    }
   },
   methods: {
     handlePlayList(playList) {
@@ -71,21 +69,8 @@ export default {
       this.$refs.shortcut.refresh()
       this.$refs.suggest.refresh()
     },
-    blurInput() {
-      // 解决移动端滑动列表虚拟键盘显示的bug
-      this.$refs.searchBox.blur()
-    },
-    saveSearch() {
-      this.saveSearchHistory(this.query)
-    },
     showConfirm() {
       this.$refs.confirm.show()
-    },
-    onQueryChange(query) {
-      this.query = query
-    },
-    addQuery(key) {
-      this.$refs.searchBox.setQuery(key)
     },
     _getHotKey() {
       getHotKey().then(res => {
@@ -96,8 +81,6 @@ export default {
       })
     },
     ...mapActions([
-      'saveSearchHistory',
-      'deleteSearchHistory',
       'clearSearchHistory'
     ])
   },

@@ -1,6 +1,6 @@
 import { playMode } from 'common/js/config'
-import { mapGetters, mapMutations } from 'vuex'
 import { shuffleArray } from 'common/js/utils'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export const playListMixin = {
   computed: {
@@ -34,6 +34,7 @@ export const playerMixin = {
     ...mapGetters([
       'sequenceList',
       'currentSong',
+      'favoriteList',
       'playList',
       'mode'
     ])
@@ -51,6 +52,22 @@ export const playerMixin = {
       this.setPlayList(list)
       this.resetCurrentIndex(list)
     },
+    isFavorite(song) {
+      let index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id
+      })
+      return index > -1
+    },
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song)
+      } else {
+        this.saveFavoriteList(song)
+      }
+    },
+    getFavoriteIcon(song) {
+      return this.isFavorite(song) ? 'icon-favorite' : 'icon-not-favorite'
+    },
     resetCurrentIndex(list) {
       // 当改变了playList时当前歌曲的index也发生了改变，所以我们要reset
       let index = list.findIndex(item => {
@@ -63,6 +80,43 @@ export const playerMixin = {
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAY_LIST'
-    })
+    }),
+    ...mapActions([
+      'saveFavoriteList',
+      'deleteFavoriteList'
+    ])
+  }
+}
+
+export const searchMixin = {
+  data() {
+    return {
+      query: '',
+      refreshDelay: 100
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
+  methods: {
+    onQueryChange(query) {
+      this.query = query
+    },
+    blurInput() {
+      // 解决移动端滑动列表虚拟键盘显示的bug
+      this.$refs.searchBox.blur()
+    },
+    saveSearch() {
+      this.saveSearchHistory(this.query)
+    },
+    addQuery(key) {
+      this.$refs.searchBox.setQuery(key)
+    },
+    ...mapActions([
+      'saveSearchHistory',
+      'deleteSearchHistory'
+    ])
   }
 }
