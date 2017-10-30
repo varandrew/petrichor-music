@@ -5,8 +5,7 @@ node_js:
   - 8.6.0
 
 install:
-  - npm install -g codecov
-  - npm install --save-dev mocha
+  - npm install --save-dev mocha istanbul codecov
 #运行的脚本命令
 script:
   - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
