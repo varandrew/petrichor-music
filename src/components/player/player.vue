@@ -90,7 +90,7 @@
       </div>
     </transition>
     <play-list ref="playList"></play-list>
-    <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"
+    <audio :src="currentSong.url" ref="audio" @play="ready" @error="error"
            @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
@@ -161,6 +161,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -279,6 +280,10 @@ export default {
       this.currentSong
         .getLyric()
         .then(lyric => {
+          // 解决歌词错乱的bug
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
           this.currentLyric = new LyricParser(lyric, this.handleLyric)
           if (this.playing) {
             this.currentLyric.play()
@@ -413,12 +418,16 @@ export default {
       }
       if (this.currentLyric) {
         this.currentLyric.stop()
+        this.currentTime = 0
+        this.playingLyric = ''
+        this.currentLineNum = 0
       }
       // 解決微信后台切换前台js不执行卡住的bug 用计时器替代this.$nextTick
-      this.$nextTick(() => {
+      clearTimeout(this.timer)
+      this.tiemr = setTimeout(() => {
         this.$refs.audio.play()
         this.LyricParser()
-      })
+      }, 1000)
     },
     playing(newPlaying) {
       const audio = this.$refs.audio

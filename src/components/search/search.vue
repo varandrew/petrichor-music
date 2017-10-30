@@ -74,7 +74,6 @@ export default {
     },
     _getHotKey() {
       getHotKey().then(res => {
-        console.log(res)
         if (res.code === ERR_OK) {
           this.hotKey = res.data.hotkey.slice(0, 10)
         }
