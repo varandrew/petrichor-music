@@ -1,10 +1,10 @@
-# Petrichor-music
+<h1 align="center">Petrichor Music</h1>
 
 <p align="center">
 <a href="https://travis-ci.org/Alamofire/varandrew/Petrichor-Music"><img src="https://travis-ci.org/varandrew/Petrichor-Music.svg?branch=master" alt="Build Status"></a>
 <a href="https://github.com/varandrew/Petrichor-Music"><img src="https://img.shields.io/npm/v/npm.svg" alt="Version"></a>
 <a href="https://david-dm.org/varandrew/Petrichor-Music"><img src="https://david-dm.org/varandrew/Petrichor-Music.svg" alt="Dependency manage"></a>
-<a href="javascript:void(0);"><img src="https://img.shields.io/badge/framework-vue-orange.svg" alt="Framework"></a>
+<a href="https://vuejs.org"><img src="https://img.shields.io/badge/framework-vue-orange.svg" alt="Framework"></a>
 </p>
 
 > A music player build by vue.
