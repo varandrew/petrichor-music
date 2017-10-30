@@ -1,5 +1,7 @@
 # Petrichor-music
 
+[![](https://travis-ci.org/varandrew/Petrichor-Music.svg?branch=master)](https://travis-ci.org/Alamofire/varandrew/Petrichor-Music)
+
 > A music player build by vue.
 
 ## Screenshot
